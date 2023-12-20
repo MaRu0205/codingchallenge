@@ -23,8 +23,8 @@ Follow these steps to get your development environment set up:
    First, clone the repository to your local machine:
 
    ```bash
-   git clone [https://github.com/MaRu0205/codingchallenge.git]
-   cd [codingchallenge]
+   git clone https://github.com/MaRu0205/codingchallenge.git
+   cd codingchallenge
    ```
 
 2. **Set Up a Virtual Environment**
@@ -61,13 +61,14 @@ Follow these steps to get your development environment set up:
 
 4. **Running the Application**
 
-   To run the application navigate to the backend/e-commerce_backend and execute the following command:
+   To run the application navigate to the backend/ecommerce_backend and execute the following command:
 
    ```bash
+   cd backend/ecommerce_backend
    python manage.py runserver
    ```
 
-5. **Deactivating the Virtual Environment**
+5. **The APIs**
 
     Once the server is running you can find the available api endpoints at http://127.0.0.1:8000/api
 
@@ -133,7 +134,7 @@ Follow these steps to get your development environment set up:
     **Colors API**
     With the colors API you can GET all available colors or POST a new color.
 
-        ```bash
+    ```bash
       {
     "size": "XXL"
     }
@@ -149,6 +150,5 @@ Follow these steps to get your development environment set up:
 
 ### Additional Notes
 
-[Include any additional information, such as how to configure the project, where to find logs, etc.]
 
 ---
