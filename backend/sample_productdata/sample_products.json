@@ -1,0 +1,802 @@
+[
+    {
+        "title": "Product 1",
+        "price": "50.99",
+        "description": "Description for Product 1",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 2",
+        "price": "51.99",
+        "description": "Description for Product 2",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 3",
+        "price": "52.99",
+        "description": "Description for Product 3",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 4",
+        "price": "53.99",
+        "description": "Description for Product 4",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 5",
+        "price": "54.99",
+        "description": "Description for Product 5",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 6",
+        "price": "55.99",
+        "description": "Description for Product 6",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 7",
+        "price": "56.99",
+        "description": "Description for Product 7",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 8",
+        "price": "57.99",
+        "description": "Description for Product 8",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 9",
+        "price": "58.99",
+        "description": "Description for Product 9",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 10",
+        "price": "59.99",
+        "description": "Description for Product 10",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 11",
+        "price": "60.99",
+        "description": "Description for Product 11",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 12",
+        "price": "61.99",
+        "description": "Description for Product 12",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 13",
+        "price": "62.99",
+        "description": "Description for Product 13",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 14",
+        "price": "63.99",
+        "description": "Description for Product 14",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 15",
+        "price": "64.99",
+        "description": "Description for Product 15",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 16",
+        "price": "65.99",
+        "description": "Description for Product 16",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 17",
+        "price": "66.99",
+        "description": "Description for Product 17",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 18",
+        "price": "67.99",
+        "description": "Description for Product 18",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 19",
+        "price": "68.99",
+        "description": "Description for Product 19",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    },
+    {
+        "title": "Product 20",
+        "price": "69.99",
+        "description": "Description for Product 20",
+        "available_sizes": [
+            {
+                "size": "XS"
+            },
+            {
+                "size": "S"
+            },
+            {
+                "size": "M"
+            },
+            {
+                "size": "L"
+            },
+            {
+                "size": "XL"
+            }
+        ],
+        "available_colors": [
+            {
+                "color": "Red"
+            },
+            {
+                "color": "Blue"
+            },
+            {
+                "color": "Green"
+            },
+            {
+                "color": "Black"
+            },
+            {
+                "color": "White"
+            }
+        ],
+        "image": null
+    }
+]
