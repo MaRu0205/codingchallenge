@@ -68,11 +68,12 @@ Follow these steps to get your development environment set up:
    python manage.py runserver
    ```
 
-5. **The APIs**
+5. **Product APIs**
 
-    Once the server is running you can find the available api endpoints at http://127.0.0.1:8000/api
+    Once the server is running you can find the available api endpoints at http://127.0.0.1:8000/product-api/
 
     **Products API**
+    http://127.0.0.1:8000/product-api/products/
     With the products API you can GET the list of all available products or POST a new products including it's available sizes and colors like the following:
 
     ```bash
@@ -121,6 +122,7 @@ Follow these steps to get your development environment set up:
    ```
 
     **Sizes API**
+    http://127.0.0.1:8000/product-api/sizes/
     With the sizes API you can GET all available sizes or POST a new size.
 
     ```bash
@@ -130,8 +132,8 @@ Follow these steps to get your development environment set up:
    ```
 
 
-
     **Colors API**
+    http://127.0.0.1:8000/product-api/colors/
     With the colors API you can GET all available colors or POST a new color.
 
     ```bash
@@ -140,7 +142,16 @@ Follow these steps to get your development environment set up:
     }
    ```
 
-6. **Deactivating the Virtual Environment**
+6. **Cart APIs**
+
+   Still in progress!
+
+   http://127.0.0.1:8000/cart-api/
+   http://127.0.0.1:8000/cart-api/carts/
+   http://127.0.0.1:8000/cart-api/cart-items/
+
+
+7. **Deactivating the Virtual Environment**
 
    When you're done working on the project, you can deactivate the virtual environment:
 
