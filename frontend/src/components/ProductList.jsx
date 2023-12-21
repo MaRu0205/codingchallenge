@@ -1,8 +1,6 @@
-
-
-
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
+import { Link } from 'preact-router/match';
 
 const ProductList = () => {
     const [products, setProducts] = useState([]);
@@ -15,35 +13,34 @@ const ProductList = () => {
     }, []);
 
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-2xl font-bold mb-4">Product List</h1>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {products.map(product => (
-                    <div key={product.id} className="border rounded shadow hover:shadow-md p-4">
-                        {/* Product Image */}
-                        <img src={product.image || 'https://placehold.co/50x50'} alt={product.title} className="w-full h-64 object-cover mb-2" />
-
-                        {/* Product Title */}
-                        <h2 className="font-semibold text-lg">{product.title}</h2>
-
-                        {/* Product Price */}
-                        <p className="text-lg text-blue-600">${product.price}</p>
-
-                        {/* Product Description */}
-                        <p className="text-gray-700">{product.description}</p>
-
-                        {/* View Details Button */}
-                        <div className="text-right mt-4">
-                            <a href={`/products/${product.id}`} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Product Detail
+        <section className="text-gray-600 body-font">
+            <div className="container px-5 py-24 mx-auto">
+                <div className="flex flex-wrap -m-4">
+                    {products.map(product => (
+                        <div key={product.id} className="lg:w-1/4 md:w-1/2 p-4 w-full">
+                            <a className="block relative h-48 rounded overflow-hidden">
+                                <img 
+                                    alt={product.title} 
+                                    className="object-cover object-center w-full h-full block" 
+                                    src={product.image || 'https://placehold.co/300x300'}
+                                />
                             </a>
+                            <div className="mt-4">
+                                <h2 className="text-gray-900 title-font text-lg font-medium">{product.title}</h2>
+                                <p className="mt-1">${product.price}</p>
+                                <Link href={`/products/${product.id}`} class="flex ml-auto text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded">
+                                    View Details
+                                </Link>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
-        </div>
+        </section>
     );
 };
 
 export default ProductList;
+
+
 
