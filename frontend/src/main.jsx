@@ -1,5 +1,7 @@
-import { render } from 'preact'
-import { App } from './app.jsx'
-import './index.css'
+import { h, render } from 'preact';
+import App from './app';
 
-render(<App />, document.getElementById('app'))
+const root = document.getElementById('app');
+
+render(<App />, root);
+
