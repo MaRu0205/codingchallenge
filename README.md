@@ -121,6 +121,8 @@ Follow these steps to get your development environment set up:
 
    ```
 
+   If you want to get only one product detaied based on the product id you can use http://127.0.0.1:8000/product-api/products/{id}
+
     **Sizes API**
     http://127.0.0.1:8000/product-api/sizes/
     With the sizes API you can GET all available sizes or POST a new size.
@@ -144,11 +146,31 @@ Follow these steps to get your development environment set up:
 
 6. **Cart APIs**
 
-   Still in progress!
+   With the carts API you can get a list of all carts using http://127.0.0.1:8000/cart-api/carts/ or you can add a cart with one or multiple products like the following example JSON:
 
-   http://127.0.0.1:8000/cart-api/
-   http://127.0.0.1:8000/cart-api/carts/
-   http://127.0.0.1:8000/cart-api/cart-items/
+
+    ```bash
+   {
+    "items": [
+        {
+        "product": 1,  // ID of the first product
+        "quantity": 2, // Quantity of the first product
+        "size": 2,     // ID of the selected size for the first product
+        "color": 4     // ID of the selected color for the first product
+        },
+        {
+        "product": 2,  // ID of the second product
+        "quantity": 1, // Quantity of the second product
+        "size": 5,     // ID of the selected size for the second product
+        "color": 1     // ID of the selected color for the second product
+        },
+        // Add more items as needed
+    ]
+    }       
+
+   ```
+
+   If you want to read only one specific cart you can use http://127.0.0.1:8000/cart-api/carts/id/
 
 
 7. **Deactivating the Virtual Environment**
