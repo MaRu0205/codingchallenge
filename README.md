@@ -5,7 +5,14 @@
 
 ## Description
 
-[Provide a brief description of your project here.]
+Backend:
+ - http://127.0.0.1:8000/product-api/
+ - http://127.0.0.1:8000/cart-api/
+
+
+Frontend:
+- http://localhost:5173/
+
 
 ## Getting Started
 
