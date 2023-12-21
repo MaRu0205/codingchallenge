@@ -183,7 +183,13 @@ Follow these steps to get your development environment set up:
    deactivate
    ```
 
-### Additional Notes
+### Django Admin Interface
+
+If you want to create, update, delete any of the objects like products, colours, sizes or carts and cart items you can use also the admin user interface http://127.0.0.1:8000/admin/
+Here are the login credentuals for the admin user:
+
+user: maru
+pw: maru
 
 
 ---
