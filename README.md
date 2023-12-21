@@ -1,6 +1,8 @@
 
 # Coding Challenge: E-commerce Product Page
 
+## "Perfection is the enemy of progress"
+
 ## Description
 
 [Provide a brief description of your project here.]
@@ -121,7 +123,7 @@ Follow these steps to get your development environment set up:
 
    ```
 
-   If you want to get only one product detaied based on the product id you can use http://127.0.0.1:8000/product-api/products/{id}
+   If you want to get only one product detail based on the product id you can use http://127.0.0.1:8000/product-api/products/{id}
 
     **Sizes API**
     http://127.0.0.1:8000/product-api/sizes/
