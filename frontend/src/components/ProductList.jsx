@@ -18,19 +18,20 @@ const ProductList = () => {
                 <div className="flex flex-wrap -m-4">
                     {products.map(product => (
                         <div key={product.id} className="lg:w-1/4 md:w-1/2 p-4 w-full">
-                            <a className="block relative h-48 rounded overflow-hidden">
+                            <div className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
                                 <img 
                                     alt={product.title} 
-                                    className="object-cover object-center w-full h-full block" 
+                                    className="object-cover object-center w-full h-48 block" 
                                     src={product.image || 'https://placehold.co/300x300'}
                                 />
-                            </a>
-                            <div className="mt-4">
-                                <h2 className="text-gray-900 title-font text-lg font-medium">{product.title}</h2>
-                                <p className="mt-1">${product.price}</p>
-                                <Link href={`/products/${product.id}`} class="flex ml-auto text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded">
-                                    View Details
-                                </Link>
+                                <div className="p-6">
+                                    <h2 className="text-gray-900 title-font text-lg font-medium">{product.title}</h2>
+                                    <p className="mt-1">${product.price}</p>
+                                    <Link href={`/products/${product.id}`} class="text-blue-500 inline-flex items-center mt-3">
+                                        View Details
+                                        {/* Optional: Add an icon or arrow for the link here */}
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     ))}
@@ -41,6 +42,7 @@ const ProductList = () => {
 };
 
 export default ProductList;
+
 
 
 
