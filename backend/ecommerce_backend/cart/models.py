@@ -3,8 +3,14 @@ from django.conf import settings
 from product.models import Product, Size, Color
 
 class Cart(models.Model):
+    class StatusChoices(models.TextChoices):
+        OPEN = 'Open', 'Open'
+        ORDERED = 'Ordered', 'Ordered'
+        ABANDONED = 'Abandoned', 'Abandoned'
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=StatusChoices.choices, default=StatusChoices.OPEN)
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
@@ -15,5 +21,6 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.quantity} x {self.product.title} - {self.size} / {self.color}"
+
 
 

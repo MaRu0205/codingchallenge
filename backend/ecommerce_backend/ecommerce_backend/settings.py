@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "product",
     "cart",
     'corsheaders',
+    'django_filters',
 
 ]
 
@@ -134,3 +135,6 @@ CORS_ALLOWED_ORIGINS = [
     # Add other origins as needed
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+}
