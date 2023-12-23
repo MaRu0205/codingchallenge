@@ -1,5 +1,6 @@
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks';
+import { useState, useEffect } from 'preact/hooks'; // Corrected import for hooks
+
 
 const Cart = () => {
     const [cart, setCart] = useState(null);
@@ -7,26 +8,29 @@ const Cart = () => {
     const [colors, setColors] = useState([]);
     const [cartItemsDetails, setCartItemsDetails] = useState({});
 
+    // Function to fetch the open cart
+    const fetchOpenCart = async () => {
+        const response = await fetch('http://127.0.0.1:8000/cart-api/carts/?status=Open');
+        const carts = await response.json();
+        if (carts.length) {
+            setCart(carts[0]);
+            fetchCartItemsDetails(carts[0].items);
+        }
+    };
+
     useEffect(() => {
         // Fetch sizes and colors
-        fetch('http://127.0.0.1:8000/product-api/sizes/').then(response => response.json()).then(data => setSizes(data));
-        fetch('http://127.0.0.1:8000/product-api/colors/').then(response => response.json()).then(data => setColors(data));
+        fetch('http://127.0.0.1:8000/product-api/sizes/')
+            .then(response => response.json())
+            .then(data => setSizes(data));
+        fetch('http://127.0.0.1:8000/product-api/colors/')
+            .then(response => response.json())
+            .then(data => setColors(data));
 
         fetchOpenCart();
     }, []);
 
-    const fetchOpenCart = () => {
-        // Fetch the open cart
-        fetch('http://127.0.0.1:8000/cart-api/carts/?status=Open')
-            .then(response => response.json())
-            .then(carts => {
-                if (carts.length) {
-                    setCart(carts[0]);
-                    fetchCartItemsDetails(carts[0].items);
-                }
-            });
-    };
-
+    // Function to fetch details of cart items
     const fetchCartItemsDetails = (cartItems) => {
         cartItems.forEach(item => {
             fetch(`http://127.0.0.1:8000/product-api/products/${item.product}/`)
@@ -35,11 +39,14 @@ const Cart = () => {
         });
     };
 
+    // Function to handle removal of cart item
     const handleRemoveItem = async (itemId) => {
         await fetch(`http://127.0.0.1:8000/cart-api/cart-items/${itemId}/`, { method: 'DELETE' });
         fetchOpenCart(); // Refresh the cart after deletion
+        window.dispatchEvent(new CustomEvent('cartUpdated')); // Dispatch custom event
     };
 
+    // Helper functions to get labels
     const getSizeLabel = (sizeId) => sizes.find(size => size.id === sizeId)?.size || 'Unknown';
     const getColorLabel = (colorId) => colors.find(color => color.id === colorId)?.color || 'Unknown';
 
@@ -96,6 +103,7 @@ const Cart = () => {
 };
 
 export default Cart;
+
 
 
 
