@@ -1,4 +1,5 @@
 from django.db import models
+from cloudinary.models import CloudinaryField
 
 class Size(models.Model):
     size = models.CharField(max_length=10)  # Example values: 'S', 'M', 'L', etc.
@@ -18,9 +19,7 @@ class Product(models.Model):
     description = models.TextField()
     available_sizes = models.ManyToManyField(Size)
     available_colors = models.ManyToManyField(Color)
-    image = models.ImageField(upload_to='products/', blank=True, null=True)  # Make image optional
+    image = CloudinaryField('image', blank=True, null=True)  # Cloudinary image field
 
     def __str__(self):
         return self.title
-
-
