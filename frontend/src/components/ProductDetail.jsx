@@ -1,12 +1,10 @@
 import { h } from 'preact';
 import { useState, useEffect } from 'preact/hooks';
 
-
 const ProductDetail = ({ id }) => {
     const [product, setProduct] = useState(null);
     const [selectedSizeId, setSelectedSizeId] = useState(null);
     const [selectedColorId, setSelectedColorId] = useState(null);
-    const [showNotification, setShowNotification] = useState(false);
 
     useEffect(() => {
         fetch(`http://127.0.0.1:8000/product-api/products/${id}/`)
@@ -58,9 +56,8 @@ const ProductDetail = ({ id }) => {
             });
         }
 
-        setShowNotification(true);
-        setTimeout(() => setShowNotification(false), 3000);
         window.dispatchEvent(new CustomEvent('cartUpdated'));
+        localStorage.setItem('cartNotification', 'added');
     };
 
     if (!product) {
@@ -97,12 +94,6 @@ const ProductDetail = ({ id }) => {
                             <span className="title-font font-medium text-2xl text-gray-900">${product.price}</span>
                             <button onClick={handleAddToCart} className="flex ml-auto text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded">Add to Cart</button>
                         </div>
-                        {showNotification && (
-                            <div className="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
-                                <p className="font-bold">Added to Cart</p>
-                                <p>The product has been successfully added to your cart.</p>
-                            </div>
-                        )}
                     </div>
                 </div>
             </div>
@@ -111,6 +102,3 @@ const ProductDetail = ({ id }) => {
 };
 
 export default ProductDetail;
-
-
-

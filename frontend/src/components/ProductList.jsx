@@ -19,11 +19,13 @@ const ProductList = () => {
                     {products.map(product => (
                         <div key={product.id} className="lg:w-1/4 md:w-1/2 p-4 w-full">
                             <div className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                                <img 
-                                    alt={product.title} 
-                                    className="object-cover object-center w-full h-48 block" 
-                                    src={product.image || 'https://placehold.co/300x300'}
-                                />
+                                <div className="p-4"> {/* Add padding around the image */}
+                                    <img 
+                                        alt={product.title} 
+                                        className="object-cover object-center w-full h-full block"  // Ensure image fills the padded area
+                                        src={product.image || 'https://placehold.co/300x300'}
+                                    />
+                                </div>
                                 <div className="p-6">
                                     <h2 className="text-gray-900 title-font text-lg font-medium">{product.title}</h2>
                                     <p className="mt-1">${product.price}</p>
@@ -42,6 +44,7 @@ const ProductList = () => {
 };
 
 export default ProductList;
+
 
 
 

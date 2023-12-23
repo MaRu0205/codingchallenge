@@ -1,25 +1,14 @@
 import { h } from 'preact';
-import { useState, useEffect } from 'preact/hooks'; // Corrected import for hooks
-
+import { useState, useEffect } from 'preact/hooks';
 
 const Cart = () => {
     const [cart, setCart] = useState(null);
     const [sizes, setSizes] = useState([]);
     const [colors, setColors] = useState([]);
     const [cartItemsDetails, setCartItemsDetails] = useState({});
-
-    // Function to fetch the open cart
-    const fetchOpenCart = async () => {
-        const response = await fetch('http://127.0.0.1:8000/cart-api/carts/?status=Open');
-        const carts = await response.json();
-        if (carts.length) {
-            setCart(carts[0]);
-            fetchCartItemsDetails(carts[0].items);
-        }
-    };
+    const [orderPlaced, setOrderPlaced] = useState(false);
 
     useEffect(() => {
-        // Fetch sizes and colors
         fetch('http://127.0.0.1:8000/product-api/sizes/')
             .then(response => response.json())
             .then(data => setSizes(data));
@@ -30,7 +19,15 @@ const Cart = () => {
         fetchOpenCart();
     }, []);
 
-    // Function to fetch details of cart items
+    const fetchOpenCart = async () => {
+        const response = await fetch('http://127.0.0.1:8000/cart-api/carts/?status=Open');
+        const carts = await response.json();
+        if (carts.length) {
+            setCart(carts[0]);
+            fetchCartItemsDetails(carts[0].items);
+        }
+    };
+
     const fetchCartItemsDetails = (cartItems) => {
         cartItems.forEach(item => {
             fetch(`http://127.0.0.1:8000/product-api/products/${item.product}/`)
@@ -39,16 +36,42 @@ const Cart = () => {
         });
     };
 
-    // Function to handle removal of cart item
     const handleRemoveItem = async (itemId) => {
         await fetch(`http://127.0.0.1:8000/cart-api/cart-items/${itemId}/`, { method: 'DELETE' });
-        fetchOpenCart(); // Refresh the cart after deletion
-        window.dispatchEvent(new CustomEvent('cartUpdated')); // Dispatch custom event
+        fetchOpenCart();
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
     };
 
-    // Helper functions to get labels
+    const handleOrderCart = async () => {
+        if (cart) {
+            const updatedCart = {
+                ...cart,
+                status: 'Ordered'
+            };
+
+            await fetch(`http://127.0.0.1:8000/cart-api/carts/${cart.id}/`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedCart)
+            });
+
+            setCart(null);
+            setOrderPlaced(true);
+            window.dispatchEvent(new CustomEvent('cartUpdated'));
+        }
+    };
+
     const getSizeLabel = (sizeId) => sizes.find(size => size.id === sizeId)?.size || 'Unknown';
     const getColorLabel = (colorId) => colors.find(color => color.id === colorId)?.color || 'Unknown';
+
+    if (orderPlaced) {
+        return (
+            <div className="container mx-auto text-center py-24">
+                <h2 className="text-2xl font-bold">Thanks for your order.</h2>
+                <p>Your ordered product will arrive soon :-)</p>
+            </div>
+        );
+    }
 
     if (!cart || !sizes.length || !colors.length || Object.keys(cartItemsDetails).length < cart.items.length) {
         return <p>Loading cart...</p>;
@@ -65,6 +88,7 @@ const Cart = () => {
                         </div>
                         <div className="flex mt-10 mb-5">
                             <h3 className="font-semibold text-gray-600 text-xs uppercase w-1/4">Product Details</h3>
+                            <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">Size/Color</h3>
                             <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">Quantity</h3>
                             <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">Price</h3>
                             <h3 className="font-semibold text-center text-gray-600 text-xs uppercase w-1/5">Total</h3>
@@ -72,6 +96,8 @@ const Cart = () => {
                         </div>
                         {cart.items.map(item => {
                             const productDetails = cartItemsDetails[item.id];
+                            const sizeLabel = getSizeLabel(item.size);
+                            const colorLabel = getColorLabel(item.color);
                             return (
                                 <div key={item.id} className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
                                     <div className="w-1/4 flex">
@@ -80,6 +106,9 @@ const Cart = () => {
                                             <span className="font-bold text-sm">{productDetails.title}</span>
                                             <span className="text-sm text-gray-500">{productDetails.description}</span>
                                         </div>
+                                    </div>
+                                    <div className="w-1/5 text-center">
+                                        <span className="font-semibold">{sizeLabel} / {colorLabel}</span>
                                     </div>
                                     <div className="w-1/5 flex justify-center">
                                         <input className="mx-2 border text-center w-8" type="text" value={item.quantity} />
@@ -94,7 +123,16 @@ const Cart = () => {
                                 </div>
                             );
                         })}
-                        {/* Add more elements like Total Price, Checkout Button here */}
+                        {cart && cart.items.length > 0 && (
+                            <div className="text-center mt-6">
+                                <button 
+                                    onClick={handleOrderCart} 
+                                    className="text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded"
+                                >
+                                    Order Cart
+                                </button>
+                            </div>
+                        )}
                     </div>
                 </div>
             </div>
@@ -103,6 +141,9 @@ const Cart = () => {
 };
 
 export default Cart;
+
+
+
 
 
 
