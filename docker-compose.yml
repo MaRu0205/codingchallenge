@@ -30,3 +30,9 @@ services:
     env_file:
       - backend/ecommerce_backend/.env  # Path to your .env file
 
+  frontend:
+    build: ./frontend  # Replace with the path to your frontend application
+    ports:
+      - "3000:80"  # Maps Nginx's port 80 to port 3000 on the host
+    depends_on:
+      - django
