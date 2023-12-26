@@ -26,6 +26,10 @@ const ProductList = () => {
                                         src={product.image || 'https://placehold.co/300x300'}
                                     />
                                 </div>
+                                
+                                {/* Grey Line */}
+                                <div className="w-4/5 mx-auto h-px bg-gray-300"></div> 
+
                                 <div className="p-6">
                                     <h2 className="text-gray-900 title-font text-lg font-medium">{product.title}</h2>
                                     <p className="mt-1">${product.price}</p>
@@ -44,8 +48,3 @@ const ProductList = () => {
 };
 
 export default ProductList;
-
-
-
-
-
