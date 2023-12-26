@@ -13,6 +13,7 @@ class CartItemSerializer(serializers.ModelSerializer):
         fields = ['id','cart', 'product', 'quantity', 'size', 'color']
 
 class CartSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", read_only=True)
     items = CartItemSerializer(many=True, required=False)
 
     class Meta:
