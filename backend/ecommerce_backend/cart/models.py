@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from product.models import Product, Size, Color
+from product.models import Article
 
 from .kafka_utils import send_order_to_kafka
 
@@ -15,16 +15,22 @@ class Cart(models.Model):
     status = models.CharField(max_length=10, choices=StatusChoices.choices, default=StatusChoices.OPEN)
 
     def save(self, *args, **kwargs):
-        # Check if the status has been changed to 'Ordered'
         if self.status == Cart.StatusChoices.ORDERED and self._state.adding is False:
-            previous_status = Cart.objects.get(id=self.id).status
+            previous_status = Cart.objects.get(id=self.id).status if not self._state.adding else None
             if previous_status != Cart.StatusChoices.ORDERED:
                 # Prepare the data to be sent to Kafka
                 order_data = {
                     "cart_id": self.id,
                     "user_id": self.user.id if self.user else None,
-                    "created_at": self.created_at.isoformat(),  # Convert datetime to string
-                    "items": list(self.items.values('product_id', 'quantity', 'size__size', 'color__color')),
+                    "created_at": self.created_at.isoformat(),
+                    "items": list(self.items.values(
+                        'article__product__title', 
+                        'article__size__size', 
+                        'article__color__color', 
+                        'article__price',
+                        'article__gtin',
+                        'article__name',
+                        'quantity'))
                 }
                 # Send the data to Kafka
                 send_order_to_kafka(order_data)
@@ -33,13 +39,25 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    article = models.ForeignKey(Article, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
-    size = models.ForeignKey(Size, on_delete=models.SET_NULL, null=True, blank=True)
-    color = models.ForeignKey(Color, on_delete=models.SET_NULL, null=True, blank=True)
+    size = models.CharField(max_length=10, blank=True, null=True)
+    color = models.CharField(max_length=20, blank=True, null=True)
+    gtin = models.CharField(max_length=14, blank=True, null=True)
+    name = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.title} - {self.size} / {self.color}"
+        return f"{self.quantity} x {self.article.product.title} - {self.article.size} / {self.article.color}"
 
+    def save(self, *args, **kwargs):
+        # Auto-fill fields from the linked Article on save, if not provided
+        if not self.size:
+            self.size = self.article.size.size if self.article.size else ''
+        if not self.color:
+            self.color = self.article.color.color if self.article.color else ''
+        if not self.gtin:
+            self.gtin = self.article.gtin
+        if not self.name:
+            self.name = self.article.name
 
-
+        super().save(*args, **kwargs)

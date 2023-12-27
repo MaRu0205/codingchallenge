@@ -1,8 +1,5 @@
 from rest_framework import serializers
-from django.conf import settings
-from .models import Product, Size, Color
-
-import cloudinary
+from .models import Product, Size, Color, Article
 
 class SizeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,47 +11,31 @@ class ColorSerializer(serializers.ModelSerializer):
         model = Color
         fields = ['id', 'color']
 
+class ArticleSerializer(serializers.ModelSerializer):
+    size = serializers.SlugRelatedField(
+        slug_field='size',
+        queryset=Size.objects.all()
+    )
+    color = serializers.SlugRelatedField(
+        slug_field='color',
+        queryset=Color.objects.all()
+    )
+    price = serializers.DecimalField(max_digits=6, decimal_places=2)
+
+    class Meta:
+        model = Article
+        fields = ['id', 'product_id', 'size', 'color', 'price', 'image', 'gtin', 'name']
+
 class ProductSerializer(serializers.ModelSerializer):
-    available_sizes = SizeSerializer(many=True, read_only=True)
-    available_colors = ColorSerializer(many=True, read_only=True)
-    image = serializers.SerializerMethodField()
+    articles = ArticleSerializer(many=True)
 
     class Meta:
         model = Product
-        fields = ['id', 'title', 'price', 'description', 'available_sizes', 'available_colors', 'image']
-
-    def get_image(self, obj):
-        if obj.image:
-            cloud_name = cloudinary.config().cloud_name
-            return f'https://res.cloudinary.com/{cloud_name}/{obj.image}'
-        return None
+        fields = ['id', 'title', 'description', 'articles']
 
     def create(self, validated_data):
-        sizes_data = validated_data.pop('available_sizes', [])
-        colors_data = validated_data.pop('available_colors', [])
+        articles_data = validated_data.pop('articles', [])
         product = Product.objects.create(**validated_data)
-        for size_data in sizes_data:
-            size, _ = Size.objects.get_or_create(**size_data)
-            product.available_sizes.add(size)
-        for color_data in colors_data:
-            color, _ = Color.objects.get_or_create(**color_data)
-            product.available_colors.add(color)
+        for article_data in articles_data:
+            Article.objects.create(product=product, **article_data)
         return product
-
-    def update(self, instance, validated_data):
-        sizes_data = validated_data.pop('available_sizes', [])
-        colors_data = validated_data.pop('available_colors', [])
-        instance = super().update(instance, validated_data)
-
-        instance.available_sizes.clear()
-        for size_data in sizes_data:
-            size, _ = Size.objects.get_or_create(**size_data)
-            instance.available_sizes.add(size)
-
-        instance.available_colors.clear()
-        for color_data in colors_data:
-            color, _ = Color.objects.get_or_create(**color_data)
-            instance.available_colors.add(color)
-
-        return instance
-

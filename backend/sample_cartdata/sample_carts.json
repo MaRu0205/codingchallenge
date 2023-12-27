@@ -1,17 +1,23 @@
 {
-    "items": [
-      {
-        "product": 1,
-        "quantity": 2, 
-        "size": 2,
-        "color": 4
-      },
-      {
-        "product": 2,
-        "quantity": 1,
-        "size": 5, 
-        "color": 1 
-      }
-    ]
-  }
+  "user": null,
+  "status": "Open",
+  "items": [
+    {
+      "article": 1,
+      "quantity": 2,
+      "size": "42",
+      "color": "Stellar Blue",
+      "gtin": "12345678901234",
+      "name": "Galactic Sprinter - Stellar Blue 42"
+    },
+    {
+      "article": 2,
+      "quantity": 1,
+      "size": "43",
+      "color": "Comet Red",
+      "gtin": "12345678901235",
+      "name": "Galactic Sprinter - Comet Red 43"
+    }
+  ]
+}
   

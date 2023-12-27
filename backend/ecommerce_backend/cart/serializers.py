@@ -1,16 +1,22 @@
 from rest_framework import serializers
 from .models import Cart, CartItem
-from product.models import Product, Size, Color
+from product.models import Article  # Import Article
 
 class CartItemSerializer(serializers.ModelSerializer):
-    cart = serializers.PrimaryKeyRelatedField(queryset=Cart.objects.all())
-    product = serializers.PrimaryKeyRelatedField(queryset=Product.objects.all())
-    size = serializers.PrimaryKeyRelatedField(queryset=Size.objects.all(), allow_null=True)
-    color = serializers.PrimaryKeyRelatedField(queryset=Color.objects.all(), allow_null=True)
+    cart = serializers.PrimaryKeyRelatedField(queryset=Cart.objects.all(), required=False)  # Make 'cart' not required
+    article = serializers.PrimaryKeyRelatedField(queryset=Article.objects.all())
 
     class Meta:
         model = CartItem
-        fields = ['id','cart', 'product', 'quantity', 'size', 'color']
+        fields = ['id', 'cart', 'article', 'quantity', 'size', 'color', 'gtin', 'name']
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['size'] = instance.article.size.size if instance.article.size else None
+        representation['color'] = instance.article.color.color if instance.article.color else None
+        representation['gtin'] = instance.article.gtin
+        representation['name'] = instance.article.name
+        return representation
 
 class CartSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%S", read_only=True)
@@ -24,6 +30,10 @@ class CartSerializer(serializers.ModelSerializer):
         items_data = validated_data.pop('items', [])
         cart = Cart.objects.create(**validated_data)
         for item_data in items_data:
+            item_data.pop('size', None)
+            item_data.pop('color', None)
+            item_data.pop('gtin', None)
+            item_data.pop('name', None)
             CartItem.objects.create(cart=cart, **item_data)
         return cart
 
@@ -59,7 +69,3 @@ class CartSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-
-
-
-
