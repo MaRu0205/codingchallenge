@@ -3,61 +3,106 @@ import { useState, useEffect } from 'preact/hooks';
 
 const ProductDetail = ({ id }) => {
     const [product, setProduct] = useState(null);
-    const [selectedSizeId, setSelectedSizeId] = useState(null);
-    const [selectedColorId, setSelectedColorId] = useState(null);
+    const [selectedColor, setSelectedColor] = useState('');
+    const [selectedSize, setSelectedSize] = useState('');
+    const [selectedArticle, setSelectedArticle] = useState(null);
 
     useEffect(() => {
         fetch(`http://127.0.0.1:8000/product-api/products/${id}/`)
             .then(response => response.json())
             .then(data => {
                 setProduct(data);
-                if (data.available_sizes.length > 0) {
-                    setSelectedSizeId(data.available_sizes[0].id);
-                }
-                if (data.available_colors.length > 0) {
-                    setSelectedColorId(data.available_colors[0].id);
+                if (data.articles.length > 0) {
+                    const firstArticle = data.articles[0];
+                    setSelectedArticle(firstArticle);
+                    setSelectedColor(firstArticle.color);
+                    setSelectedSize(firstArticle.size);
                 }
             })
             .catch(error => console.error('Error fetching product:', error));
     }, [id]);
 
-    const handleAddToCart = async () => {
-        const productId = parseInt(id, 10);
-        const response = await fetch('http://127.0.0.1:8000/cart-api/carts/?status=Open');
-        const carts = await response.json();
-        let cartId = carts.length ? carts[0].id : null;
+    useEffect(() => {
+        if (product) {
+            const article = product.articles.find(a => a.color === selectedColor && a.size === selectedSize);
+            setSelectedArticle(article || product.articles.find(a => a.color === selectedColor));
+        }
+    }, [selectedColor, selectedSize, product]);
 
-        const cartItemData = {
-            cart: cartId,
-            product: productId,
-            quantity: 1,
-            size: parseInt(selectedSizeId, 10),
-            color: parseInt(selectedColorId, 10)
-        };
+    const handleColorSelect = (color) => {
+        setSelectedColor(color);
+        const sizesInSelectedColor = product.articles.filter(article => article.color === color).map(article => article.size);
+        if (!sizesInSelectedColor.includes(selectedSize)) {
+            setSelectedSize(sizesInSelectedColor[0]);
+        }
+    };
 
-        if (cartId) {
-            await fetch('http://127.0.0.1:8000/cart-api/cart-items/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(cartItemData)
-            });
+    const renderColorOptions = () => {
+        const uniqueColors = Array.from(new Set(product.articles.map(a => a.color)));
+        const colorImages = uniqueColors.map(color => ({
+            color,
+            image: product.articles.find(article => article.color === color).image || 'https://dummyimage.com/400x400'
+        }));
+
+        return colorImages.map(colorImage => (
+            <img
+                key={colorImage.color}
+                src={colorImage.image}
+                alt={colorImage.color}
+                onClick={() => handleColorSelect(colorImage.color)}
+                className={`object-cover w-16 h-16 rounded-full m-2 cursor-pointer ${selectedColor === colorImage.color ? 'ring-2 ring-blue-500' : ''}`}
+            />
+        ));
+    };
+
+    const renderSizeOptions = () => {
+        const sizesInSelectedColor = Array.from(new Set(product.articles.filter(article => article.color === selectedColor).map(article => article.size)));
+        return sizesInSelectedColor.map(size => (
+            <button
+                key={size}
+                onClick={() => setSelectedSize(size)}
+                className={`p-2 m-1 border rounded ${selectedSize === size ? 'border-blue-500 bg-blue-100' : 'border-gray-300'}`}
+            >
+                {size}
+            </button>
+        ));
+    };
+
+    const addToCart = async () => {
+        let openCart = null;
+
+        // Check for an open cart
+        const cartResponse = await fetch('http://127.0.0.1:8000/cart-api/carts/?status=Open');
+        const carts = await cartResponse.json();
+        if (carts.length > 0) {
+            openCart = carts[0];
         } else {
+            // Create a new cart
             const newCartResponse = await fetch('http://127.0.0.1:8000/cart-api/carts/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ items: [] })
+                body: JSON.stringify({ user: null, status: 'Open', items: [] })
             });
-            const newCart = await newCartResponse.json();
-            cartItemData.cart = newCart.id;
-            await fetch('http://127.0.0.1:8000/cart-api/cart-items/', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(cartItemData)
-            });
+            openCart = await newCartResponse.json();
         }
 
-        window.dispatchEvent(new CustomEvent('cartUpdated'));
-        localStorage.setItem('cartNotification', 'added');
+        // Add the article to the cart
+        await fetch('http://127.0.0.1:8000/cart-api/cart-items/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                cart: openCart.id,
+                article: selectedArticle.id,
+                quantity: 1,
+                size: selectedArticle.size,
+                color: selectedArticle.color,
+                gtin: selectedArticle.gtin,
+                name: selectedArticle.name
+            })
+        });
+
+        // Dispatch the custom event to update the cart count
+        window.dispatchEvent(new Event('cartUpdated'));
     };
 
     if (!product) {
@@ -68,32 +113,20 @@ const ProductDetail = ({ id }) => {
         <section className="text-gray-600 body-font overflow-hidden">
             <div className="container px-5 py-24 mx-auto">
                 <div className="lg:w-4/5 mx-auto flex flex-wrap">
-                    <img alt={product.title} className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded" src={product.image || 'https://dummyimage.com/300x300'}/>
+                    <img alt={selectedArticle?.name} className="lg:w-1/2 w-full lg:h-auto h-64 object-cover object-center rounded" src={selectedArticle?.image || 'https://dummyimage.com/400x400'} />
                     <div className="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-                        <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{product.title}</h1>
+                        <h1 className="text-gray-900 text-3xl title-font font-medium mb-1">{selectedArticle?.name}</h1>
                         <p className="leading-relaxed">{product.description}</p>
-                        <div className="flex mt-6 items-center pb-5 border-b-2 border-gray-100 mb-5">
-                            <div className="flex">
-                                <span className="mr-3">Size</span>
-                                <select value={selectedSizeId} onChange={(e) => setSelectedSizeId(e.target.value)} className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-500 text-base pl-3 pr-10">
-                                    {product.available_sizes.map(size => (
-                                        <option key={size.id} value={size.id}>{size.size}</option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="flex ml-6 items-center">
-                                <span className="mr-3">Color</span>
-                                <select value={selectedColorId} onChange={(e) => setSelectedColorId(e.target.value)} className="rounded border appearance-none border-gray-300 py-2 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-500 text-base pl-3 pr-10">
-                                    {product.available_colors.map(color => (
-                                        <option key={color.id} value={color.id}>{color.color}</option>
-                                    ))}
-                                </select>
-                            </div>
+                        <p className="mt-1 mb-4 text-lg">GTIN: {selectedArticle?.gtin}</p>
+                        <div className="flex flex-wrap mt-4">
+                            {renderColorOptions()}
                         </div>
-                        <div className="flex">
-                            <span className="title-font font-medium text-2xl text-gray-900">${product.price}</span>
-                            <button onClick={handleAddToCart} className="flex ml-auto text-white bg-blue-500 border-0 py-2 px-6 focus:outline-none hover:bg-blue-600 rounded">Add to Cart</button>
+                        <div className="flex flex-wrap mt-4">
+                            {renderSizeOptions()}
                         </div>
+                        <button onClick={addToCart} className="mt-6 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                            Add to Cart
+                        </button>
                     </div>
                 </div>
             </div>

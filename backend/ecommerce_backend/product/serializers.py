@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Product, Size, Color, Article
+import cloudinary
 
 class SizeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,10 +22,17 @@ class ArticleSerializer(serializers.ModelSerializer):
         queryset=Color.objects.all()
     )
     price = serializers.DecimalField(max_digits=6, decimal_places=2)
+    image = serializers.SerializerMethodField()
 
     class Meta:
         model = Article
         fields = ['id', 'product_id', 'size', 'color', 'price', 'image', 'gtin', 'name']
+
+    def get_image(self, obj):
+        if obj.image:
+            cloud_name = cloudinary.config().cloud_name
+            return f'https://res.cloudinary.com/{cloud_name}/{obj.image}'
+        return None
 
 class ProductSerializer(serializers.ModelSerializer):
     articles = ArticleSerializer(many=True)
