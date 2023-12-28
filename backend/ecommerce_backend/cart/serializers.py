@@ -2,13 +2,20 @@ from rest_framework import serializers
 from .models import Cart, CartItem
 from product.models import Article  # Import Article
 
+
 class CartItemSerializer(serializers.ModelSerializer):
-    cart = serializers.PrimaryKeyRelatedField(queryset=Cart.objects.all(), required=False)  # Make 'cart' not required
+    cart = serializers.PrimaryKeyRelatedField(queryset=Cart.objects.all())
     article = serializers.PrimaryKeyRelatedField(queryset=Article.objects.all())
+    size = serializers.CharField(required=False, allow_blank=True, max_length=10)  # Optional
+    color = serializers.CharField(required=False, allow_blank=True, max_length=20)  # Optional
+    gtin = serializers.CharField(required=False, allow_blank=True, max_length=14)  # Optional
+    name = serializers.CharField(required=False, allow_blank=True, max_length=255)  # Optional
+    image = serializers.ImageField(required=False)  # Optional
+    price = serializers.DecimalField(required=False, max_digits=6, decimal_places=2)  # Optional
 
     class Meta:
         model = CartItem
-        fields = ['id', 'cart', 'article', 'quantity', 'size', 'color', 'gtin', 'name']
+        fields = ['id', 'cart', 'article', 'quantity', 'size', 'color', 'gtin', 'name', 'image', 'price']
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -16,6 +23,8 @@ class CartItemSerializer(serializers.ModelSerializer):
         representation['color'] = instance.article.color.color if instance.article.color else None
         representation['gtin'] = instance.article.gtin
         representation['name'] = instance.article.name
+        representation['image'] = instance.article.image
+        representation['price'] = instance.article.price
         return representation
 
 class CartSerializer(serializers.ModelSerializer):
@@ -34,6 +43,8 @@ class CartSerializer(serializers.ModelSerializer):
             item_data.pop('color', None)
             item_data.pop('gtin', None)
             item_data.pop('name', None)
+            item_data.pop('image', None)
+            item_data.pop('price', None)
             CartItem.objects.create(cart=cart, **item_data)
         return cart
 
