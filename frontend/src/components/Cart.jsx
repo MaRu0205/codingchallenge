@@ -17,6 +17,23 @@ const Cart = () => {
         }
     };
 
+    const handleUpdateQuantity = async (itemId, cartId, articleId, newQuantity) => {
+        await fetch(`http://127.0.0.1:8000/cart-api/cart-items/${itemId}/`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                cart: cartId,
+                article: articleId,
+                quantity: parseInt(newQuantity, 10)
+            })
+        });
+        fetchOpenCart();
+        window.dispatchEvent(new CustomEvent('cartUpdated'));
+    };
+    
+    
+    
+
     const handleRemoveItem = async (itemId) => {
         await fetch(`http://127.0.0.1:8000/cart-api/cart-items/${itemId}/`, { method: 'DELETE' });
         fetchOpenCart();
@@ -25,17 +42,20 @@ const Cart = () => {
 
     const handleOrderCart = async () => {
         if (cart) {
+            // Create a new object for the updated cart without the 'items' array
             const updatedCart = {
-                ...cart,
+                id: cart.id,
+                user: cart.user,
+                created_at: cart.created_at,
                 status: 'Ordered'
             };
-
+    
             await fetch(`http://127.0.0.1:8000/cart-api/carts/${cart.id}/`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedCart)
             });
-
+    
             setCart(null);
             setOrderPlaced(true);
             window.dispatchEvent(new CustomEvent('cartUpdated'));
@@ -72,16 +92,30 @@ const Cart = () => {
                         </div>
                         {cart.items.map(item => (
                             <div key={item.id} className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
-                                <div className="w-2/5 flex">
+                                {/* <div className="w-2/5 flex">
                                     <img className="h-24 w-24 object-cover rounded" src={'https://dummyimage.com/100x100'} alt={item.name} />
                                     <div className="flex flex-col justify-between ml-4 flex-grow">
                                         <span className="font-bold text-sm">{item.name}</span>
                                         <span className="text-sm text-gray-500">Size: {item.size}, Color: {item.color}</span>
                                         <span className="text-sm text-gray-500">GTIN: {item.gtin}</span>
                                     </div>
+                                </div> */}
+                                <div className="w-2/5 flex">
+                                    {/* Use the actual image URL from the cart item */}
+                                    <img className="h-24 w-24 object-cover rounded" src={item.image} alt={item.name} />
+                                    <div className="flex flex-col justify-between ml-4 flex-grow">
+                                        <span className="font-bold text-sm">{item.name}</span>
+                                        <span className="text-sm text-gray-500">Size: {item.size}, Color: {item.color}</span>
+                                        <span className="text-sm text-gray-500">GTIN: {item.gtin}</span>
+                                    </div>
                                 </div>
-                                <div className="w-1/5 flex justify-center">
-                                    <input className="mx-2 border text-center w-8" type="text" value={item.quantity} />
+                               <div className="w-1/5 flex justify-center">
+                                    <input
+                                        className="mx-2 border text-center w-8"
+                                        type="text"
+                                        value={item.quantity}
+                                        onChange={(e) => handleUpdateQuantity(item.id, cart.id, item.article, e.target.value)}
+                                    />
                                 </div>
                                 <span className="w-1/5 text-center font-semibold text-sm">${item.price}</span>
                                 <div className="w-1/5 text-center">

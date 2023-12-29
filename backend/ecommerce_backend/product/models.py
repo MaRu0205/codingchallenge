@@ -14,8 +14,17 @@ class Color(models.Model):
         return self.color
 
 class Product(models.Model):
+    class StatusChoices(models.TextChoices):
+        ACTIVE = 'Active', 'Active'
+        INACTIVE = 'Inactive', 'Inactive'
+
     title = models.CharField(max_length=255)
     description = models.TextField()
+    status = models.CharField(
+        max_length=8, 
+        choices=StatusChoices.choices, 
+        default=StatusChoices.ACTIVE
+    )
 
     def __str__(self):
         return self.title

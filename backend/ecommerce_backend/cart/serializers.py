@@ -4,8 +4,8 @@ from product.models import Article  # Import Article
 
 
 class CartItemSerializer(serializers.ModelSerializer):
-    cart = serializers.PrimaryKeyRelatedField(queryset=Cart.objects.all())
-    article = serializers.PrimaryKeyRelatedField(queryset=Article.objects.all())
+    cart = serializers.PrimaryKeyRelatedField(queryset=Cart.objects.all()) # mandatory
+    article = serializers.PrimaryKeyRelatedField(queryset=Article.objects.all()) # mandatory
     size = serializers.CharField(required=False, allow_blank=True, max_length=10)  # Optional
     color = serializers.CharField(required=False, allow_blank=True, max_length=20)  # Optional
     gtin = serializers.CharField(required=False, allow_blank=True, max_length=14)  # Optional
@@ -16,7 +16,33 @@ class CartItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = CartItem
         fields = ['id', 'cart', 'article', 'quantity', 'size', 'color', 'gtin', 'name', 'image', 'price']
+        extra_kwargs = {
+            'image': {'read_only': True},  # Make the image field read-only
+        }
 
+    def create(self, validated_data):
+        cart = validated_data.get('cart')
+        article = validated_data.get('article')
+        quantity = validated_data.get('quantity', 1)
+
+        # Check if the cart item already exists
+        existing_item = CartItem.objects.filter(cart=cart, article=article).first()
+        if existing_item:
+            # Update quantity of the existing item
+            existing_item.quantity += quantity
+            existing_item.save()
+            return existing_item
+        else:
+            # Create a new item if it doesn't exist
+            return CartItem.objects.create(**validated_data)
+        
+    def update(self, instance, validated_data):
+        # Update only the provided fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+        return instance
+    
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['size'] = instance.article.size.size if instance.article.size else None
@@ -25,6 +51,10 @@ class CartItemSerializer(serializers.ModelSerializer):
         representation['name'] = instance.article.name
         representation['image'] = instance.article.image
         representation['price'] = instance.article.price
+
+        # Convert the Cloudinary image field to a string URL
+        representation['image'] = instance.article.image.url if instance.article.image else None
+
         return representation
 
 class CartSerializer(serializers.ModelSerializer):
@@ -54,29 +84,12 @@ class CartSerializer(serializers.ModelSerializer):
         if items_data is not None:
             existing_item_ids = [item.id for item in instance.items.all()]
             updated_item_ids = []
-
-            for item_data in items_data:
-                item_id = item_data.get('id', None)
-                item_data.pop('cart', None)  # Remove 'cart' key if it exists
-
-                if item_id and item_id in existing_item_ids:
-                    # Update the existing item
-                    cart_item = CartItem.objects.get(id=item_id, cart=instance)
-                    for key, value in item_data.items():
-                        setattr(cart_item, key, value)
-                    cart_item.save()
-                    updated_item_ids.append(item_id)
-                elif not item_id:
-                    # Create a new item
-                    CartItem.objects.create(cart=instance, **item_data)
-
-            # Remove any items not in the updated data
-            for item_id in set(existing_item_ids) - set(updated_item_ids):
-                CartItem.objects.get(id=item_id, cart=instance).delete()
+            
 
         # Update other fields of the cart
         for attr, value in validated_data.items():
-            setattr(instance, attr, value)
+            if hasattr(instance, attr):
+                setattr(instance, attr, value)
         instance.save()
 
-        return instance
+        return instance    
