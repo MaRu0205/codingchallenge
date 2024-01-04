@@ -4,6 +4,7 @@ import Header from './components/Header';
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail';
 import Cart from './components/Cart';
+import Register from './components/Register';
 
 
 const App = () => {
@@ -14,6 +15,7 @@ const App = () => {
                 <ProductList path="/" />
                 <ProductDetail path="/products/:id" />
                 <Cart path="/cart" />
+                <Register path="/register" />
             </Router>
         </div>
     );

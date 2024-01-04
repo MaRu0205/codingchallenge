@@ -40,6 +40,7 @@ class Header extends Component {
                     </Link>
                     <nav className="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-gray-400 flex flex-wrap items-center text-base justify-center">
                         <Link href="/" className="mr-5 hover:text-gray-900">Product List</Link>
+                        <Link href="/register" className="mr-5 hover:text-gray-900">Sign Up</Link>
                         {/* Other links can be added here */}
                     </nav>
                     <Link href="/cart" className="relative inline-flex items-center bg-gray-100 border-0 py-1 px-3 focus:outline-none hover:bg-gray-200 rounded text-base mt-4 md:mt-0">
