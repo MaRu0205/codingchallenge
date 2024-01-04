@@ -12,6 +12,7 @@ class Cart(models.Model):
         ABANDONED = 'Abandoned', 'Abandoned'
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    session_key = models.CharField(max_length=40, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=10, choices=StatusChoices.choices, default=StatusChoices.OPEN)
 
