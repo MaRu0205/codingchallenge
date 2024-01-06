@@ -46,7 +46,7 @@ For further inquiries or discussions about the project, feel free to contact.
 
 
 
-## Product API Documentation
+# Product API Documentation
 
 ### Overview
 The Product API enables management of products and their related articles within the e-commerce platform. It supports operations such as listing, creating, updating, and deleting products and their articles.
@@ -138,3 +138,41 @@ http://127.0.0.1:8000/product-api/
 ### Error Handling
 - Responses include HTTP status codes for errors (e.g., 404 for not found, 400 for bad request).
 - Error details are provided in the response body.
+
+
+
+Certainly! Here's an explanation on how to identify running Docker containers, access the Kafka shell, and start a Kafka producer for the "Orders" topic, which you can include in your documentation:
+
+# Managing Docker Containers and Kafka
+
+### Identifying Running Docker Containers
+
+To see a list of all running Docker containers, use the following command:
+
+```bash
+docker ps
+```
+
+This command lists the containers currently running on your system. The output includes useful information such as container ID, image name, when it was created, status, and ports being used.
+
+### Starting a Kafka Consumer for the "Orders" Topic
+
+1. **Access Kafka Container**: First, ensure you're in the Kafka container shell. If you're not, you can access it using the Docker exec command:
+
+   ```bash
+   docker exec -it coding_challenge-kafka-1 /bin/sh
+   ```
+
+2. **Start Kafka Consumer**: Once inside the Kafka container shell, you can start a consumer that listens to the "Orders" topic using the following command:
+
+   ```bash
+   /opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic Orders --from-beginning
+   ```
+
+   - `--bootstrap-server localhost:9092`: This specifies the Kafka broker to connect to. Replace `localhost:9092` with the address of your Kafka broker if it differs.
+   - `--topic Orders`: This specifies the topic to consume messages from. In this case, it's the "Orders" topic.
+   - `--from-beginning`: This flag tells the consumer to consume all messages from the beginning of the topic's log. If omitted, it will only consume new messages published after the consumer starts.
+
+3. **Viewing Messages**: After running the command, the consumer will start listening for messages on the "Orders" topic. Any messages sent to this topic (either before the consumer started, if `--from-beginning` is used, or after the consumer starts) will be displayed in the terminal.
+
+4. **Exiting Consumer**: To stop the consumer, you can simply use `Ctrl + C` in the terminal.
