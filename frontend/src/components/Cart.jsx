@@ -65,22 +65,21 @@ const Cart = () => {
         window.dispatchEvent(new CustomEvent('cartUpdated'));
     };
 
-    // const handleOrderCart = async () => {
-    //     if (cart) {
-    //         // Create a new object for the updated cart without the 'items' array
-    //         const updatedCart = {
-    //             id: cart.id,
-    //             user: cart.user,
-    //             created_at: cart.created_at,
-    //             status: 'Ordered'
-    //         };
-
     const handleOrderCart = async () => {
         const userId = localStorage.getItem('userId');
         if (cart) {
+            // Update the cart with the user ID if not already done
             if (!cart.user && userId) {
                 await updateCartWithUserId(userId);
             }
+    
+            // Create a new object for the updated cart
+            const updatedCart = {
+                id: cart.id,
+                user: cart.user || userId, // Use the user ID from the cart or the one from localStorage
+                created_at: cart.created_at,
+                status: 'Ordered'
+            };
     
             await fetch(`http://127.0.0.1:8000/cart-api/carts/${cart.id}/`, {
                 method: 'PUT',

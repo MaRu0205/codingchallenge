@@ -55,7 +55,9 @@ const Register = () => {
     
             const jsonResponse = await response.json();
             if (response.ok) {
-                localStorage.setItem('accessToken', jsonResponse.access); // Use the correct key
+                localStorage.setItem('accessToken', jsonResponse.access);
+                localStorage.setItem('refreshToken', jsonResponse.refresh);
+                localStorage.setItem('userId', jsonResponse.user_id);
 
                 // Dispatch the authChange event to update the Header
                 window.dispatchEvent(new Event('authChange'));
@@ -79,24 +81,45 @@ const Register = () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(loginFormData),
             });
-    
+
             if (!response.ok) {
                 throw new Error(`Login failed with status: ${response.status}`);
             }
-    
+
             const jsonResponse = await response.json();
             localStorage.setItem('accessToken', jsonResponse.access);
             localStorage.setItem('refreshToken', jsonResponse.refresh);
+            localStorage.setItem('userId', jsonResponse.user_id);
 
             // Dispatch the authChange event to update the Header
             window.dispatchEvent(new Event('authChange'));
-    
+
+            // Check and update cart
+            await checkAndUpdateCart(jsonResponse.user_id);
+
             // Navigate to the My Account page
             route('/myaccount');
         } catch (error) {
             console.error('Login failed:', error);
         }
     };
+
+    const checkAndUpdateCart = async (userId) => {
+        const sessionKey = localStorage.getItem('sessionKey');
+        const cartResponse = await fetch(`http://127.0.0.1:8000/cart-api/carts/?session_key=${sessionKey}&status=Open`);
+        const carts = await cartResponse.json();
+
+        if (carts.length > 0) {
+            // Update the cart with the user ID
+            await fetch(`http://127.0.0.1:8000/cart-api/carts/${carts[0].id}/`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user: userId }),
+            });
+        }
+    };
+
+
     
     return (
         <div className="container mx-auto p-8 flex justify-around">
