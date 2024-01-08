@@ -10,7 +10,6 @@ from django.dispatch import receiver
 class CustomUser(AbstractUser):
     profile_image = CloudinaryField('image', blank=True, null=True)
 
-
 class Customer(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     address_line1 = models.CharField(max_length=255, blank=True)

@@ -1,14 +1,21 @@
 from rest_framework import viewsets
+from django_filters.rest_framework import DjangoFilterBackend
 from .models import Cart, CartItem
 from .serializers import CartSerializer, CartItemSerializer
-from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 
 class CartViewSet(viewsets.ModelViewSet):
     queryset = Cart.objects.all()
     serializer_class = CartSerializer
-    filter_backends = [DjangoFilterBackend]  # Add the Django Filter backend
-    filterset_fields = ['user', 'session_key', 'status']  # Define the fields you want to filter on
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['status', 'user', 'session_key']
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def perform_update(self, serializer):
+        serializer.save()
+
 
 class CartItemViewSet(viewsets.ModelViewSet):
     queryset = CartItem.objects.all()

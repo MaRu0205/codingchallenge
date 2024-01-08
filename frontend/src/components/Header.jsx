@@ -22,11 +22,17 @@ class Header extends Component {
 
     handleAuthChange = () => {
         this.setState({ isLoggedIn: !!localStorage.getItem('accessToken') });
+        this.updateItemCount(); // Update cart count on auth change
     }
 
     updateItemCount = async () => {
-        const response = await fetch('http://127.0.0.1:8000/cart-api/carts/?status=Open');
+        const sessionKey = localStorage.getItem('sessionKey');
+        const userId = localStorage.getItem('userId'); // Assuming you store user ID in local storage upon login
+
+        let query = userId ? `?user=${userId}` : `?session_key=${sessionKey}`;
+        const response = await fetch(`http://127.0.0.1:8000/cart-api/carts/${query}&status=Open`);
         const carts = await response.json();
+        
         if (carts.length && carts[0].items) {
             this.setState({ itemCount: carts[0].items.reduce((acc, item) => acc + item.quantity, 0) });
         } else {

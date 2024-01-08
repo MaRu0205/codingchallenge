@@ -5,15 +5,43 @@ const Cart = () => {
     const [cart, setCart] = useState(null);
     const [orderPlaced, setOrderPlaced] = useState(false);
 
-    useEffect(() => {
-        fetchOpenCart();
-    }, []);
-
     const fetchOpenCart = async () => {
-        const response = await fetch('http://127.0.0.1:8000/cart-api/carts/?status=Open');
+        const sessionKey = localStorage.getItem('sessionKey');
+        const userId = localStorage.getItem('userId');
+
+        let query = userId ? `?user=${userId}` : `?session_key=${sessionKey}`;
+        const response = await fetch(`http://127.0.0.1:8000/cart-api/carts/${query}&status=Open`);
         const carts = await response.json();
         if (carts.length) {
             setCart(carts[0]);
+        }
+    };
+
+    useEffect(() => {
+        fetchOpenCart();
+
+        const handleLogin = () => {
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                updateCartWithUserId(userId);
+            }
+        };
+
+        window.addEventListener('authChange', handleLogin);
+
+        return () => {
+            window.removeEventListener('authChange', handleLogin);
+        };
+    }, []);
+
+    const updateCartWithUserId = async (userId) => {
+        if (cart && !cart.user) {
+            await fetch(`http://127.0.0.1:8000/cart-api/carts/${cart.id}/`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ user: userId })
+            });
+            fetchOpenCart();
         }
     };
 
@@ -31,24 +59,28 @@ const Cart = () => {
         window.dispatchEvent(new CustomEvent('cartUpdated'));
     };
     
-    
-    
-
     const handleRemoveItem = async (itemId) => {
         await fetch(`http://127.0.0.1:8000/cart-api/cart-items/${itemId}/`, { method: 'DELETE' });
         fetchOpenCart();
         window.dispatchEvent(new CustomEvent('cartUpdated'));
     };
 
+    // const handleOrderCart = async () => {
+    //     if (cart) {
+    //         // Create a new object for the updated cart without the 'items' array
+    //         const updatedCart = {
+    //             id: cart.id,
+    //             user: cart.user,
+    //             created_at: cart.created_at,
+    //             status: 'Ordered'
+    //         };
+
     const handleOrderCart = async () => {
+        const userId = localStorage.getItem('userId');
         if (cart) {
-            // Create a new object for the updated cart without the 'items' array
-            const updatedCart = {
-                id: cart.id,
-                user: cart.user,
-                created_at: cart.created_at,
-                status: 'Ordered'
-            };
+            if (!cart.user && userId) {
+                await updateCartWithUserId(userId);
+            }
     
             await fetch(`http://127.0.0.1:8000/cart-api/carts/${cart.id}/`, {
                 method: 'PUT',
@@ -92,14 +124,6 @@ const Cart = () => {
                         </div>
                         {cart.items.map(item => (
                             <div key={item.id} className="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
-                                {/* <div className="w-2/5 flex">
-                                    <img className="h-24 w-24 object-cover rounded" src={'https://dummyimage.com/100x100'} alt={item.name} />
-                                    <div className="flex flex-col justify-between ml-4 flex-grow">
-                                        <span className="font-bold text-sm">{item.name}</span>
-                                        <span className="text-sm text-gray-500">Size: {item.size}, Color: {item.color}</span>
-                                        <span className="text-sm text-gray-500">GTIN: {item.gtin}</span>
-                                    </div>
-                                </div> */}
                                 <div className="w-2/5 flex">
                                     {/* Use the actual image URL from the cart item */}
                                     <img className="h-24 w-24 object-cover rounded" src={item.image} alt={item.name} />

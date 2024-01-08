@@ -23,7 +23,7 @@ const ProductDetail = ({ id }) => {
     }, [id]);
 
     useEffect(() => {
-        if (product) {
+        if (product) {  
             const article = product.articles.find(a => a.color === selectedColor && a.size === selectedSize);
             setSelectedArticle(article || product.articles.find(a => a.color === selectedColor));
         }
@@ -70,22 +70,27 @@ const ProductDetail = ({ id }) => {
 
     const addToCart = async () => {
         let openCart = null;
-
+        const sessionKey = localStorage.getItem('sessionKey');
+        const userId = localStorage.getItem('userId'); // Assuming you store user ID in local storage upon login
+    
         // Check for an open cart
-        const cartResponse = await fetch('http://127.0.0.1:8000/cart-api/carts/?status=Open');
+        let query = userId ? `?user=${userId}` : `?session_key=${sessionKey}`;
+        const cartResponse = await fetch(`http://127.0.0.1:8000/cart-api/carts/${query}&status=Open`);
+    
         const carts = await cartResponse.json();
         if (carts.length > 0) {
             openCart = carts[0];
         } else {
             // Create a new cart
+            let cartData = userId ? { user: userId, status: 'Open', items: [] } : { session_key: sessionKey, status: 'Open', items: [] };
             const newCartResponse = await fetch('http://127.0.0.1:8000/cart-api/carts/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ user: null, status: 'Open', items: [] })
+                body: JSON.stringify(cartData)
             });
             openCart = await newCartResponse.json();
         }
-
+    
         // Add the article to the cart
         await fetch('http://127.0.0.1:8000/cart-api/cart-items/', {
             method: 'POST',
@@ -100,7 +105,7 @@ const ProductDetail = ({ id }) => {
                 name: selectedArticle.name
             })
         });
-
+    
         // Dispatch the custom event to update the cart count
         window.dispatchEvent(new Event('cartUpdated'));
     };
