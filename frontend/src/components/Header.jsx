@@ -51,6 +51,7 @@ class Header extends Component {
 
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');
+            localStorage.removeItem('userId');
 
             window.location.href = '/'; // Redirect to home
         } catch (error) {

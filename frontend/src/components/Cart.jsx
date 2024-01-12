@@ -91,7 +91,19 @@ const Cart = () => {
             setOrderPlaced(true);
             window.dispatchEvent(new CustomEvent('cartUpdated'));
         }
-    };
+    };  
+
+    if (orderPlaced) {
+        return (
+            <div className="container mx-auto text-center py-24">
+                <h2 className="text-2xl font-bold">Thanks for your order.</h2>
+                <p>Your ordered products will arrive soon :-)</p>
+            </div>
+        );
+    }
+
+    // Check if the cart is empty
+    const isCartEmpty = cart && cart.items && cart.items.length === 0;
 
     if (orderPlaced) {
         return (
@@ -104,6 +116,15 @@ const Cart = () => {
 
     if (!cart) {
         return <p>Loading cart...</p>;
+    }
+
+    if (isCartEmpty) {
+        return (
+            <div className="container mx-auto text-center py-24">
+                <h2 className="text-2xl font-bold">Your cart is empty.</h2>
+                <p>Let's start shopping :-)</p>
+            </div>
+        );
     }
 
     return (
